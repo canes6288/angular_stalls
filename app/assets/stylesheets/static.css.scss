@@ -147,8 +147,12 @@ li.ng-leave {
     height: 30px;
 
 }
+.close {
+  text-decoration: none;
 
-Uncoment this section when doing form validation
+}
+
+  /*Uncoment this section when doing form validation*/
 form input.ng-valid.ng-dirty {
       background: #78FA89;
     }
@@ -177,4 +181,3 @@ form.ng-invalid.ng-dirty {
   height: 40px;
   opacity: 1;
 }
-
