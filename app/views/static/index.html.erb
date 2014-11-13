@@ -1,55 +1,81 @@
 <h1>Angular Leather Lane Market App</h1>
 
-  <div ng-controller="MarketController">
-    <nav>
-      <h2>Stalls</h2>
-      <input ng-model="search" placeholder="search" />
-      <ul>
-        <li class="new_item" ng-show="newStall" ng-click="selectStall(newStall)" ng-class="{ highlighted: stall === selectedStall }">{{ newStall.name }}</li>
+<div ng-controller="MarketController">
+  <nav>
+    <h2>Stalls</h2>
+    <input ng-model="search" placeholder="search"/>
+    <ul>
+      <li class="new_item" ng-show="newStall"
+          ng-class="{ highlighted: stall === selectedStall }"
+          ng-click="selectStall(newStall)">{{ newStall.name }}</li>
 
-        <li ng-repeat="stall in stalls | filter: search | orderBy: 'name'" ng-click="selectStall(stall)" ng-class="{ highlighted: stall === selectedStall }">{{ stall.name }}</li>
-      </ul>
-      <h3>Add an item</h3>
-      <aside>Form is {{ stallForm.$valid }}</aside>
-      <form name="stallForm" ng-submit="stallForm.$valid && addStall();" novalidate>
+      <li ng-repeat="stall in stalls | filter : searchFunction | orderBy:'name'"
+          ng-class="{ highlighted: stall === selectedStall }"
+          ng-click="selectStall(stall)">{{ stall.name }}</li>
+    </ul>
+
+    <button class="btn"
+            ng-init="isCollapsed = true"
+            ng-click="isCollapsed = !isCollapsed">
+            <span ng-show="isCollapsed">Add an item</span>
+            <span ng-hide="isCollapsed">Hide this form</span>
+    </button>
+    <div ng-hide="isCollapsed">
+      <form name="stallForm" ng-submit="addStall()" novalidate>
         <label>Name</label>
         <input type="text" ng-model="newStall.name" required/><br>
         <label>Price</label>
-        <div class="warning-number">Price must be more than 1, less than 50</div>
-        <input type="number" ng-model="newStall.price" min="1" max="50" required/><br>
+        <div class="warning-number">Price must be more than 1 and less than 10</div>
+        <input type="number" ng-model="newStall.price" required
+               min="1" max="9"/><br>
         <label>Description</label>
         <textarea ng-model="newStall.description"></textarea><br>
-        <button>Submit</button>
+        <button ng-disabled="stallForm.$invalid">Submit</button>
       </form>
-    </nav>
+    </div>
+  </nav>
 
   <section ng-show="selectedStall">
     <div ng-click="clearSelectedStall();" class="close"><a href="">X</a></div>
     <h2>Selected Stall Details</h2>
-    <table>
+    <table ng-hide="editStall">
       <tr>
         <td>Name:</td>
-        <td ng-hide="editStall">{{ selectedStall.name }}</td>
-        <td ng-show="editStall"><input ng-model="editStall.name" /></td>
+        <td>{{ selectedStall.name }}</td>
       </tr>
       <tr>
         <td>Price:</td>
-        <td ng-hide="editStall"> {{ selectedStall.price}}</td>
-        <td ng-show="editStall"><input ng-model="editStall.price" /></td>
+        <td> {{ selectedStall.price | currency }}</td>
       </tr>
       <tr>
         <td>Description:</td>
-        <td ng-hide="editStall"> {{ selectedStall.description}}</td>
-        <td ng-show="editStall"><textarea ng-model="editStall.description"></textarea></td>
+        <td> {{ selectedStall.description}}</td>
       </tr>
     </table>
-    <button ng-click="deleteStall(selectedStall)">Delete Stall</button>
-    <button ng-hide="editStall" ng-click="setEditStall(selectedStall)">Edit Stall</button>
-    <button ng-show="editStall" ng-click="updateStall(editStall)">Update Stall</button>
+
+    <table ng-show="editStall">
+      <tr>
+        <td>Name:</td>
+        <td><input ng-model="editStall.name" /></td>
+      </tr>
+      <tr>
+        <td>Price:</td>
+        <td><input ng-model="editStall.price" /></td>
+      </tr>
+      <tr>
+        <td>Description:</td>
+        <td><textarea ng-model="editStall.description"></textarea></td>
+      </tr>
+    </table>
+
+    <button ng-hide="editStall" ng-click="deleteStall(selectedStall);">Delete</button>
+    <button ng-hide="editStall" ng-click="setEditStall(selectedStall);">Edit</button>
+    <button ng-show="editStall" ng-click="clearEditStall();">Cancel</button>
+    <button ng-show="editStall" ng-click="updateStall(editStall);">Save</button>
   </section>
+
   <section ng-hide="selectedStall">
     <h2>Leather Lane</h2>
     <p>Leather Lane is an awesome market in Clerkenwell that has a wide variety of lunch options.  Select an option from the left to see more details.</p>
   </section>
-
-    </div>
+</div>
